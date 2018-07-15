@@ -9,6 +9,7 @@ Route::get('/home', function(){
     return view('home');
 });
 
+Route::get('/tree', 'EmployeesController@tree');
 
 Route::any('employees/list', 'EmployeesController@getList')->middleware('auth');
 

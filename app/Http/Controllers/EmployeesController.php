@@ -48,12 +48,20 @@ class EmployeesController extends Controller
         return redirect()->action('EmployeesController@index');
     }
 
-    public function show($pid = 0)
+    public function show()
     {
-        $child = Employees::oldest('lb')->child($pid)->get();
+        $items = Employees::oldest('lb')->get();
 
         return view('employees.show-tree')
-            ->with(['employees' => $child]);
+            ->with(json_encode($items));
+        // return json_encode($child);
+    }
+
+    public function tree()
+    {
+        $employees = Employees::with('childrenRecursive')->whereNull('parent_id')->get()->jsonSerialize();
+
+        return $employees;
     }
 
     public function create()
@@ -100,6 +108,7 @@ class EmployeesController extends Controller
 
         if($request->hasFile('photo')) {
             $file = $request->file('photo');
+            // dd($request);
             $fileName = $id . '.' . $file->extension();
             $file->move(public_path() . '/uploads/photos/', $fileName);
             Image::make(public_path() . '/uploads/photos/' . $fileName)

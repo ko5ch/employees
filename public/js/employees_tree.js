@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $('#tree  ul li a').live('click',function(){
+    $('#tree  ul li a').on('click',function(){
         var id=$(this).attr('id');
         $('#'+id+' span ul ').toggle();
         $.ajax({
@@ -8,6 +8,7 @@ $(document).ready(function(){
             data:{},
             dataType:'html',
             success:function(data){
+                console.log(data);
                 $('#'+id+' span ul').html($('#tree ul li', data));
             },
             error:function(){alert('Error!')}

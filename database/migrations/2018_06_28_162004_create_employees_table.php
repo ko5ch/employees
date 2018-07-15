@@ -18,7 +18,8 @@ class CreateEmployeesTable extends Migration
             $table->string('position');
             $table->string('name');
             $table->date('start_day');
-            $table->unsignedInteger('parent_id');
+            $table->unsignedInteger('parent_id')->nullable();
+            $table->foreign(['parent_id'])->references(['id'])->on('employees');
             $table->unsignedInteger('lb');
             $table->unsignedInteger('rb');
             $table->integer('salary');

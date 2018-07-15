@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\DB;
 
 class Employees extends Model
 {
+
+    protected $table = 'employees';
+
     /**
      * Fillable fields for an Employee
      *
@@ -27,9 +30,35 @@ class Employees extends Model
      *
      * @var array
      */
-    protected $dates = ['start_day'];
+    protected $dates   = ['start_day'];
     public $timestamps = false;
     protected $guarded = ['id',];
+    
+    // loads only direct children - 1 level
+    public function children()
+    {
+        return $this->hasMany('App\Employees', 'parent_id');
+    }
+    
+    // recursive, loads all descendants
+    public function childrenRecursive()
+    {
+        return $this->children()->with('childrenRecursive');
+        // which is equivalent to:
+        // return $this->hasMany('Employees', 'parent_id')->with('childrenRecursive);
+    }
+
+    //parent
+    public function parent()
+    {
+        return $this->belongsTo('App\Employees', 'parent_id');
+    }
+
+    //all ascendants
+    public function parentRecursive()
+    {
+        return $this->parent()->with('parentRecursive');
+    }
 
     /**
      * Set the position attribute.
